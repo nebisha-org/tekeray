@@ -1,28 +1,168 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    # -----------------------------------------------
+    # Best Practices
+    # -----------------------------------------------
+    avoid_print: true                               # Avoid using print statements in production code.
+    avoid_slow_async_io: true                       # Avoid slow async IO operations, such as HttpClient calls, as they may block performance.
+    avoid_function_literals_in_foreach_calls: true  # Avoid using function literals in `forEach`, prefer direct function references.
+    avoid_redundant_argument_values: true           # Avoid passing default values explicitly where unnecessary.
+    avoid_setters_without_getters: true             # Ensure setters always have corresponding getters for consistency.
+    avoid_types_on_closure_parameters: true         # Avoid specifying types explicitly for closure parameters, let the compiler infer types.
+    always_require_non_null_named_parameters: true  # Ensure named parameters are always non-nullable for better safety.
+    avoid_positional_boolean_parameters: true       # Use named parameters instead of positional booleans to improve readability.
+    avoid_unnecessary_containers: true              # Avoid redundant Container widgets to simplify the widget tree.
+    unnecessary_new: true                           # Avoid using the `new` keyword in Dart, it's redundant.
+    avoid_as: true                                  # Prefer type-safe alternatives like `is` over type casting with `as`.
+    avoid_annotating_with_dynamic: true             # Avoid using dynamic type annotations to ensure better type safety.
+    require_trailing_commas: true                   # Add trailing commas where possible for cleaner diffs and improved formatting.
+    use_key_in_widget_constructors: true            # Ensure widgets have a key for proper identification in widget trees.
+    cancel_subscriptions: true                      # Ensure that any stream subscriptions are properly canceled to avoid memory leaks.
+    unnecessary_lambdas: true                       # Avoid using unnecessary lambda expressions.
+    unnecessary_null_in_if_null_operators: true     # Avoid using `??` operator if the left-hand value cannot be null.
+    unnecessary_statements: true                    # Avoid any unnecessary statements in the code.
+    unnecessary_string_escapes: true                # Avoid unnecessary escapes in string literals.
+
+    # -----------------------------------------------
+    # Performance
+    # -----------------------------------------------
+    prefer_const_constructors: true                 # Prefer `const` constructors for immutable objects to improve performance.
+    prefer_const_constructors_in_immutables: true   # Use `const` constructors in immutable classes.
+    prefer_const_declarations: true                 # Declare constant values with `const` to reduce memory usage.
+    prefer_final_fields: true                       # Fields that are not reassigned should be declared as final.
+    prefer_final_locals: true                       # Local variables that are not reassigned should also be final.
+    unnecessary_this: true                          # Avoid using `this` when it's not required, improves readability.
+    prefer_typing_uninitialized_variables: true     # Always specify types for uninitialized variables to avoid issues later.
+    prefer_final_parameters: true                   # Parameters that are not modified should be marked as `final`.
+    prefer_void_to_null: true                       # Prefer `void` return types for functions that don’t return a value instead of `null`.
+
+    # -----------------------------------------------
+    # Naming Conventions
+    # -----------------------------------------------
+    camel_case_types: true                          # Use camelCase for class names and typedefs.
+    non_constant_identifier_names: true             # Avoid non-standard variable names, prefer proper naming conventions.
+    file_names: true                                # File names should follow snake_case convention.
+    prefer_single_quotes: true                      # Prefer single quotes for strings unless interpolation or special cases exist.
+    constant_identifier_names: true                 # Use UPPERCASE for constant identifiers.
+
+    # -----------------------------------------------
+    # Code Readability & Consistency
+    # -----------------------------------------------
+    avoid_empty_else: true                          # Avoid empty `else` blocks for cleaner control flow.
+    prefer_for_elements_to_map_fromIterable: true   # Prefer `for` elements over `map` in List/Set literals for simplicity.
+    prefer_is_not_empty: true                       # Prefer `isNotEmpty` to check for non-empty collections instead of `!isEmpty`.
+    prefer_interpolation_to_compose_strings: true   # Use string interpolation instead of concatenation for cleaner code.
+    prefer_inlined_adds: true                       # Inline `add` operations when possible for better readability.
+    prefer_spread_collections: true                 # Use spread operators (`...`) instead of `addAll` for collections.
+    curly_braces_in_flow_control_structures: true   # Always use curly braces `{}` for control structures to avoid ambiguity.
+
+    # -----------------------------------------------
+    # Readability
+    # -----------------------------------------------
+    always_declare_return_types: true               # Always declare return types for better readability and type safety.
+    use_rethrow_when_possible: true                 # Use `rethrow` in catch blocks when rethrowing exceptions.
+
+    # -----------------------------------------------
+    # Code Quality
+    # -----------------------------------------------
+    prefer_is_empty: true                           # Prefer `isEmpty` for checking empty collections.
+    avoid_init_to_null: true                        # Avoid initializing variables to null, prefer leaving them uninitialized.
+    prefer_expression_function_bodies: true         # Use shorthand syntax for single-expression functions.
+    prefer_asserts_in_initializer_lists: true       # Place `assert` statements in initializer lists to catch issues early.
+    prefer_asserts_with_message: true               # Use descriptive messages with assert statements for better debugging.
+    empty_catches: true                             # Avoid empty `catch` blocks to ensure errors are properly handled.
+    prefer_iterable_whereType: true                 # Use `whereType` to filter collections by type, instead of manual type checks.
+    leading_newlines_in_multiline_strings: true     # Ensure multiline strings have consistent leading newlines for readability.
+    omit_local_variable_types: true                 # Avoid explicitly specifying local variable types where they can be inferred.
+    sort_child_properties_last: true                # Sort child properties last in widget constructors for better readability.
+    sort_constructors_first: true                   # Sort constructors first in class definitions.
+    sort_unnamed_constructors_first: true           # Place unnamed constructors before named ones.
+
+    # -----------------------------------------------
+    # Documentation & Comments
+    # -----------------------------------------------
+    always_put_required_named_parameters_first: true# Put required named parameters at the start of the parameter list.
+    slash_for_doc_comments: true                    # Use `///` for documentation comments rather than `/* */`.
+    comment_references: true                        # Ensure comments reference correct identifiers to avoid confusion.
+    always_use_package_imports: true                # Prefer `package:` imports over relative imports for consistency.
+    annotate_overrides: true                        # Use the `@override` annotation when overriding methods to improve readability.
+
+    # -----------------------------------------------
+    # Error Prevention
+    # -----------------------------------------------
+    avoid_renaming_method_parameters: true          # Avoid renaming method parameters in overrides to reduce confusion.
+    avoid_returning_null_for_future: true           # Avoid returning `null` in a Future, ensure a valid Future object is returned.
+    avoid_returning_null_for_void: true             # Avoid returning null for void-returning functions.
+    avoid_void_async: true                          # Avoid using `async` on functions that return void, as it leads to confusion.
+    throw_in_finally: true                          # Avoid throwing exceptions in finally blocks as it overrides caught errors.
+    use_string_buffers: true                        # Use StringBuffer for efficient string concatenation in loops.
+    use_test_throws_matchers: true                  # Use `throws` matchers in tests to verify exceptions are thrown.
+    control_flow_in_finally: true                   # Avoid changing control flow (e.g. return, break) inside `finally` blocks.
+
+    # -----------------------------------------------
+    # Design Guidelines
+    # -----------------------------------------------
+    use_function_type_syntax_for_parameters: true   # Use function-type syntax for parameters when passing functions.
+    use_build_context_synchronously: true           # Ensure `BuildContext` is not used after an async gap to avoid exceptions.
+
+    # -----------------------------------------------
+    # Deprecations & Warnings
+    # -----------------------------------------------
+    unawaited_futures: true                         # Warn about unawaited Futures to prevent unintentional asynchronous behavior.
+    use_setters_to_change_properties: true          # Use setters instead of directly modifying class fields.
+
+    # -----------------------------------------------
+    # Flutter-specific Lints
+    # -----------------------------------------------
+    flutter_style_todos: true                       # Use Flutter-style TODOs.
+    prefer_const_literals_to_create_immutables: true# Prefer `const` when creating immutable lists, maps, and sets.
+    avoid_returning_this: true                      # Avoid returning `this` in method calls for cleaner APIs.
+
+# -----------------------------------------------
+# Enabling pedantic-like rules for stricter guidelines
+# -----------------------------------------------
+analyzer:
+  exclude:
+    - "**/*.g.dart"                                 # Exclude generated files (.g.dart) from analysis to focus on core code.
+    - build/**                                      # Exclude the build directory as it contains auto-generated files.
+    - "bin/cache/**"                                # Exclude cache files in the bin directory to avoid analyzing cached data.
+    - lib/generated/**                              # Exclude generated files in the lib directory for cleaner analysis.
+    - lib/di/*.config.dart                          # Exclude specific config files in the dependency injection directory.
+    - test/*.mocks.dart                             # Exclude mock files in tests to avoid analyzing generated test mocks.
+  strong-mode:
+    implicit-casts: false                           # Disable implicit casts for stricter type checks.
+    implicit-dynamic: false                         # Disable implicit dynamic types to improve code safety.
+  language:
+    strict-casts: true                              # Enforces type casting to be explicit and prevents implicit type casts
+    strict-inference: true                          # Requires type annotations when the type cannot be inferred
+    strict-raw-types: true                          # Disallows the use of raw types without generics (e.g., List instead of List<T>)
+  errors:
+    unused_local_variable: warning                  # Warn about unused local variables to clean up dead code.
+    line_length: ignore                             # Disable line length limit
+    missing_return: error                           # Treats missing return statements as errors to enforce explicit returns.
+    dead_code: warning                                 # Flags dead code as informational to identify unused sections.
+    invalid_annotation_target: ignore               # Ignores cases of invalid annotations to reduce unnecessary warnings.
+    invalid_use_of_dynamic: ignore
+    inference_failure_on_function_return_type: ignore
+#    avoid_annotating_with_dynamic: ignore
+
+dart_code_metrics:
+  anti-patterns:
+    - long-parameter-list                           # Avoids functions with long parameter lists for readability.
+  metrics:
+    cyclomatic-complexity: 20                       # Sets a max complexity to control branching in functions.
+    maximum-nesting-level: 5                        # Limits nested blocks (loops/conditions) for readability.
+    number-of-parameters: 4                         # Restricts function parameters to 4 for simplicity.
+    source-lines-of-code: 50                        # Caps function length to 50 lines for modular code.
+  metrics-exclude:
+    - test/**                                       # Excludes test files from metrics to keep test code flexible.
+  rules:
+    - newline-before-return                         # Enforces a newline before return statements for clarity.
+    - no-boolean-literal-compare                    # Avoids comparing booleans directly to literals.
+    - no-empty-block                                # Prevents empty code blocks for cleaner structure.
+    - prefer-trailing-comma                         # Enforces trailing commas for consistent formatting.
+    - prefer-conditional-expressions                # Prefers inline conditionals for simpler code.
+    - no-equal-then-else                            # Discourages `else` blocks after `if` with return/break.
