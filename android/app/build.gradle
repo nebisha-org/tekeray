@@ -1,0 +1,71 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+/*
+# -----------------------------------------------
+# App Detail
+# -----------------------------------------------
+*/
+
+def appPackageName = "com.example.tekeray"
+def maxSdkVersion = 35
+def minSdkVersion = 24
+def appVersionCode = 1
+def appVersionName = "1.0"
+
+/*-----------------------------------------------*/
+android {
+    namespace = appPackageName
+    compileSdk = maxSdkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        applicationId = appPackageName
+        minSdk = minSdkVersion
+        targetSdk = maxSdkVersion
+        versionCode = appVersionCode
+        versionName = appVersionName
+        multiDexEnabled = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig = signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    lint {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    implementation "androidx.multidex:multidex:2.0.1"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+
+    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "com.google.android.material:material:1.9.0"
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+}
+
+flutter {
+    source = "../.."
+}

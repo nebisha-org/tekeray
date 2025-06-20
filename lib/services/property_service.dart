@@ -27,15 +27,15 @@ class PropertyService {
 
   // --- Step A.2: Request Pre-signed S3 URLs from Lambda ---
   Future<List<String>?> _getPresignedUrlsFromLambda(
-    BuildContext context,
-    List<XFile> imageFiles,
+    final BuildContext context,
+    final List<XFile> imageFiles,
   ) async {
     if (imageFiles.isEmpty) return [];
 
     try {
       // Prepare data for the Lambda: list of image types (e.g., 'image/jpeg')
-      List<Map<String, String>> filesToUpload = imageFiles.map((file) {
-        String? mimeType = _getMimeType(file.path);
+      final filesToUpload = imageFiles.map((final file) {
+        final mimeType = _getMimeType(file.path);
         return {
           'filename': file.name, // Or a unique ID
           'contentType': mimeType ?? 'application/octet-stream',
@@ -49,7 +49,7 @@ class PropertyService {
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> urls = jsonDecode(response.body)['urls'];
+        final urls = List<dynamic>.from(jsonDecode(response.body)['urls'] as List);
         return List<String>.from(urls); // Return the list of pre-signed URLs
       } else {
         _showSnackBar(
@@ -72,7 +72,7 @@ class PropertyService {
   }
 
   // Helper to determine MIME type (basic)
-  String? _getMimeType(String filePath) {
+  String? _getMimeType(final String filePath) {
     if (filePath.toLowerCase().endsWith('.jpg') ||
         filePath.toLowerCase().endsWith('.jpeg')) {
       return 'image/jpeg';
@@ -87,9 +87,9 @@ class PropertyService {
 
   // --- Step A.3: Upload Images Directly to S3 using Pre-signed URLs ---
   Future<List<String>?> _uploadImagesToS3(
-    BuildContext context,
-    List<XFile> imageFiles,
-    List<String> presignedUrls,
+    final BuildContext context,
+    final List<XFile> imageFiles,
+    final List<String> presignedUrls,
   ) async {
     if (imageFiles.isEmpty ||
         presignedUrls.isEmpty ||
@@ -102,11 +102,11 @@ class PropertyService {
       return null;
     }
 
-    List<String> finalS3Urls = [];
+    final finalS3Urls = <String>[];
     try {
-      for (int i = 0; i < imageFiles.length; i++) {
-        final XFile imageFile = imageFiles[i];
-        final String presignedUrl = presignedUrls[i];
+      for (var i = 0; i < imageFiles.length; i++) {
+        final imageFile = imageFiles[i];
+        final presignedUrl = presignedUrls[i];
 
         // Read image bytes
         final List<int> imageBytes = await imageFile.readAsBytes();
@@ -125,7 +125,7 @@ class PropertyService {
         if (response.statusCode >= 200 && response.statusCode < 300) {
           // Extract the actual S3 object URL (the part before the query parameters in the presigned URL)
           // This assumes the presigned URL is like "https://bucket.s3.region.amazonaws.com/path/to/object?AWSAccessKeyId=..."
-          String s3ObjectUrl = presignedUrl.split('?')[0];
+          final s3ObjectUrl = presignedUrl.split('?')[0];
           finalS3Urls.add(s3ObjectUrl);
           print('Uploaded ${imageFile.name} to S3: $s3ObjectUrl');
         } else {
@@ -148,15 +148,15 @@ class PropertyService {
 
   // --- Step A.4: Post Property Metadata + S3 URLs to Main Lambda ---
   Future<void> addPropertyMetadata({
-    required BuildContext context,
-    required String title,
-    required String description,
-    required String location,
-    required double price,
-    required List<String> imageUrls, // Now receiving S3 URLs
+    required final BuildContext context,
+    required final String title,
+    required final String description,
+    required final String location,
+    required final double price,
+    required final List<String> imageUrls, // Now receiving S3 URLs
   }) async {
     try {
-      Map<String, dynamic> propertyData = {
+      final propertyData = <String, dynamic>{
         'title': title,
         'description': description,
         'location': location,
@@ -198,14 +198,14 @@ class PropertyService {
 
   // --- Combined Workflow Function ---
   Future<void> addPropertyFullWorkflow(
-    BuildContext context, {
-    required String title,
-    required String description,
-    required String location,
-    required double price,
+    final BuildContext context, {
+    required final String title,
+    required final String description,
+    required final String location,
+    required final double price,
   }) async {
     // 1. Pick images
-    final List<XFile>? pickedImages = await pickMultipleImages();
+    final pickedImages = await pickMultipleImages();
     if (pickedImages == null || pickedImages.isEmpty) {
       _showSnackBar(context, 'No images selected.', Colors.orange);
       return;
@@ -213,7 +213,7 @@ class PropertyService {
 
     // 2. Get pre-signed URLs from Lambda
     _showSnackBar(context, 'Requesting S3 upload URLs...', Colors.blue);
-    final List<String>? presignedUrls = await _getPresignedUrlsFromLambda(
+    final presignedUrls = await _getPresignedUrlsFromLambda(
       context,
       pickedImages,
     );
@@ -224,7 +224,7 @@ class PropertyService {
 
     // 3. Upload images directly to S3
     _showSnackBar(context, 'Uploading images to S3...', Colors.blue);
-    final List<String>? finalS3Urls = await _uploadImagesToS3(
+    final finalS3Urls = await _uploadImagesToS3(
       context,
       pickedImages,
       presignedUrls,
@@ -254,7 +254,7 @@ class PropertyService {
     );
   }
 
-  void _showSnackBar(BuildContext context, String message, Color color) {
+  void _showSnackBar(final BuildContext context, final String message, final Color color) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message), backgroundColor: color));
