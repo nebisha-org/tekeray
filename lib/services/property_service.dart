@@ -7,11 +7,12 @@ import 'package:flutter/material.dart'; // For UI context (e.g., ScaffoldMesseng
 // --- Define your API Gateway Endpoints ---
 // 1. Endpoint for requesting pre-signed S3 URLs (Lambda 1)
 const String _presignedUrlLambdaEndpoint =
-    'YOUR_API_GATEWAY_GET_PRESIGNED_URLS_URL';
+    'https://bcad3ddmbc.execute-api.us-east-2.amazonaws.com/Prod/getPresignedUrls';
 //    Example: 'https://xxxxxxx.execute-api.us-east-1.amazonaws.com/prod/getPresignedUrls'
 
 // 2. Endpoint for adding property metadata to DynamoDB (Lambda 2)
-const String _addPropertyLambdaEndpoint = 'YOUR_API_GATEWAY_ADD_PROPERTY_URL';
+const String _addPropertyLambdaEndpoint =
+    'https://bcad3ddmbc.execute-api.us-east-2.amazonaws.com/Prod/addProperty';
 //    Example: 'https://xxxxxxx.execute-api.us-east-1.amazonaws.com/prod/addProperty'
 
 class PropertyService {
@@ -161,7 +162,9 @@ class PropertyService {
         'description': description,
         'location': location,
         'price': price,
-        'imageUrls': imageUrls, // List of S3 URLs
+        // NOTE: If your backend expects a single imageUrl, keep the first one:
+        'imageUrl': imageUrls.isNotEmpty ? imageUrls.first : '',
+        // Or if it supports multiple, swap to 'imageUrls': imageUrls,
       };
 
       final response = await http.post(
